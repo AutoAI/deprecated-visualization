@@ -12,4 +12,8 @@ class VisualizationWindow : public QGLWidget {
 		void initializeGL();
 		void resizeGL(int w, int h);
 		void paintGL();
+
+	private:
+		uint32_t width;
+		uint32_t height;
 };
