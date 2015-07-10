@@ -21,12 +21,15 @@ void VisualizationWindow::initializeGL() {
 }
 
 void VisualizationWindow::resizeGL(int w, int h) {
-	glViewport(0, 0, 1280, 720);
+	width = w;
+	height = h;
+
+	glViewport(0, 0, w, h);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	glOrtho(0, 1280, 0, 720, -1, 1);
+	glOrtho(0, w, 0, h, -1, 1);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
