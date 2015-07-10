@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 
-	vw.resize(300, 300);
+	vw.resize(1280, 720);
 	vw.show();
 
 	return a.exec();

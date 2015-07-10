@@ -7,5 +7,9 @@ class VisualizationWindow : public QGLWidget {
 	public:
 		VisualizationWindow(QWidget *p = 0);
 		bool initFrames();
-
+	
+	protected:
+		void initializeGL();
+		void resizeGL(int w, int h);
+		void paintGL();
 };
