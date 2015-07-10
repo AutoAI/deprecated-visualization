@@ -1,6 +1,6 @@
 #include "VisualizationWindow.h"
 
-VisualizationWindow::VisualizationWindow(QWidget *p) {
+VisualizationWindow::VisualizationWindow(QWidget *p) : QGLWidget(p) {
 
 }
 
