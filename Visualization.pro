@@ -8,6 +8,6 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += VisualizationWindow.h
-SOURCES += main.cpp VisualizationWindow.cpp
+HEADERS += VisualizationWindow.h sandbox/Travis/frame_buffer.h
+SOURCES += main.cpp VisualizationWindow.cpp sandbox/Travis/frame_buffer.cc
 QT += opengl

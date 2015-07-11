@@ -1,5 +1,7 @@
-#include "VisualizationWindow.h"
 #include <iostream>
+
+#include "VisualizationWindow.h"
+#include "sandbox/Travis/frame_buffer.h"
 
 using namespace std;
 
@@ -10,15 +12,15 @@ VisualizationWindow::VisualizationWindow(QWidget *p) : QGLWidget(p) {
 }
 
 bool VisualizationWindow::initFrames() {
-	grayData = new uint8_t[width * height];
-
-	int i = 0;
-	for (int iY = 0; iY < height; iY++) {
-		for (int iX = 0; iX < width; iX++) {
-			i = (iY * width) + iX;
-			grayData[i] = iX % 255;
-		}
+	FrameBuffer fb("/home/parthmehrotra/Visualization/random.dat", width, height);
+	
+	uint16_t *grayData16 = fb.next();
+	uint8_t *grayData8 = new uint8_t[fb.bufferSize()/sizeof(uint8_t)];
+	for(int i = 0; i < fb.bufferSize() / 2; i++) {
+		grayData8[i] = (uint8_t)grayData16[i];
 	}
+
+	grayData = grayData8;
 
 	return true;
 }
