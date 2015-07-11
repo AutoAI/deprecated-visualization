@@ -54,16 +54,7 @@ void VisualizationWindow::paintGL() {
 	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	
-	glLineWidth(30);
-	glColor3f(1.0, 1.0, 1.0);
-	glBegin(GL_LINE_LOOP);
-		glVertex2f(1, 1);
-		glVertex2f(5, 5);
-		glVertex2f(10, 10);
-		glVertex2f(100, 100);
-	glEnd();
-	
+
 	glRasterPos2i(0, 0);
 	glDrawPixels(width, height, GL_LUMINANCE, GL_UNSIGNED_BYTE, grayData);
 

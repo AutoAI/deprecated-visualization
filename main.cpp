@@ -10,10 +10,6 @@ int main(int argc, char *argv[]) {
 	
 	VisualizationWindow vw;
 
-	if (!vw.initFrames()) {
-		return 0;
-	}
-
 	vw.resize(WIDTH, HEIGHT);
 	vw.show();
 	vw.update();
