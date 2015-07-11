@@ -1,11 +1,25 @@
 #include "VisualizationWindow.h"
 #include <iostream>
 
+using namespace std;
+
 VisualizationWindow::VisualizationWindow(QWidget *p) : QGLWidget(p) {
-	
+	width = 1280;
+	height = 720;
+	grayData = NULL;
 }
 
 bool VisualizationWindow::initFrames() {
+	grayData = new uint8_t[width * height];
+
+	int i = 0;
+	for (int iY = 0; iY < height; iY++) {
+		for (int iX = 0; iX < width; iX++) {
+			i = (iY * width) + iX;
+			grayData[i] = iX % 255;
+		}
+	}
+
 	return true;
 }
 
@@ -36,20 +50,22 @@ void VisualizationWindow::resizeGL(int w, int h) {
 }
 
 void VisualizationWindow::paintGL() {
-	std::cout << "paint" << std::endl;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
 	glLineWidth(30);
-	glColor3f(0.5, 0.5, 0.5);
+	glColor3f(1.0, 1.0, 1.0);
 	glBegin(GL_LINE_LOOP);
 		glVertex2f(1, 1);
 		glVertex2f(5, 5);
 		glVertex2f(10, 10);
 		glVertex2f(100, 100);
 	glEnd();
+	
+	glRasterPos2i(0, 0);
+	glDrawPixels(width, height, GL_LUMINANCE, GL_UNSIGNED_BYTE, grayData);
 
 	glFlush();
 }
