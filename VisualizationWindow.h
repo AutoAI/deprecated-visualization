@@ -6,7 +6,6 @@ class VisualizationWindow : public QGLWidget {
 
 	public:
 		VisualizationWindow(QWidget *p = 0);
-		bool initFrames();
 	
 	protected:
 		void initializeGL();
@@ -19,4 +18,6 @@ class VisualizationWindow : public QGLWidget {
 
 		uint8_t *grayData;
 		uint16_t *clusters;
+
+		void createValues();
 };

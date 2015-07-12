@@ -19,7 +19,7 @@ VisualizationWindow::VisualizationWindow(QWidget *p) : QGLWidget(p) {
 	clusters = NULL;
 }
 
-bool VisualizationWindow::initFrames() {
+void VisualizationWindow::createValues() {
 	srand(time(NULL));
 	BitmapLoader fb("/home/parthmehrotra/Visualization/road.bmp", width, height);
 	
@@ -33,17 +33,10 @@ bool VisualizationWindow::initFrames() {
 	}
 
 
-	//HistogramCluster cluster(width, height, 15, 128, 72, 16);
-	//clusters = cluster.doCluster(grayData, 0.00001, 100);
-	clusters = new uint16_t[width/10 * height/10];
-	for (uint16_t x = 0; x < width/10; x++) {
-		for (uint16_t y = 0; y < height/10; y++) {
-			clusters[x + y*width/10] = rand() % 10000 + 1;
-			cout << clusters[x + y * width/10] << endl;
-		}
-	}
+	HistogramCluster cluster(width, height, 15, 128, 72, 16);
+	clusters = cluster.doCluster(grayData, 0, 100);
 
-	return true;
+	cout << "created" << endl;
 }
 
 void VisualizationWindow::initializeGL() {
@@ -71,6 +64,7 @@ void VisualizationWindow::resizeGL(int w, int h) {
 }
 
 void VisualizationWindow::paintGL() {
+	createValues();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	glMatrixMode(GL_MODELVIEW);
@@ -79,15 +73,26 @@ void VisualizationWindow::paintGL() {
 	glRasterPos2i(0, height);
 	glDrawPixels(width, height, GL_LUMINANCE, GL_UNSIGNED_BYTE, grayData);
 
-	glColor4f(1, 0, 0, 1);
-	for (int x = 0; x < width/10; x++) {
-		for (int y = 0; y < height / 10; y++) {
-			glColor4f(1, 0, 0, 1);
+	for (int _x = 0; _x < width/10; _x++) {
+		for (int _y = 0; _y < height / 10; _y++) {
+
+			int x = _x * 10; 
+			int y = _y * 10;
+
+			int w = width / 10;
+			int h = height / 10;
+
+			cout << "this shit happened" << endl;
+			float value = clusters[_x + _y * w];
+
+			cout << "this shit happened" << endl;
+			glColor4f(1, 1, 1, value);
+			
 			glBegin(GL_QUADS);
-				glVertex2f(x + (x * width), y + (y * height));
-				glVertex2f((x + (x * width)) + width/10, y + (y * height));
-				glVertex2f((x + (x * width)) + width/10, (y + (y * height)) + height/10);
-				glVertex2f(x + (x * width), (y + (y * height)) + height/10);
+				glVertex2f(x, y);
+				glVertex2f(x + w, y);
+				glVertex2f(x + w, y + h);
+				glVertex2f(x, y + h);
 			glEnd();
 		}
 	}
