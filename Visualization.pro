@@ -7,7 +7,9 @@ TARGET =
 DEPENDPATH += .
 INCLUDEPATH += .
 
+CONFIG += C++11
+
 # Input
-HEADERS += VisualizationWindow.h sandbox/Travis/frame_buffer.h
-SOURCES += main.cpp VisualizationWindow.cpp sandbox/Travis/frame_buffer.cc
+HEADERS += VisualizationWindow.h sandbox/Travis/frame_buffer.h sandbox/Travis/histogram_cluster.h
+SOURCES += main.cpp VisualizationWindow.cpp sandbox/Travis/frame_buffer.cc sandbox/Travis/histogram_cluster.cc
 QT += opengl

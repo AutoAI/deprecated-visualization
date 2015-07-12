@@ -1,7 +1,9 @@
 #include <iostream>
 
 #include "VisualizationWindow.h"
+
 #include "sandbox/Travis/frame_buffer.h"
+#include "sandbox/Travis/histogram_cluster.h"
 
 using namespace std;
 
@@ -14,13 +16,16 @@ VisualizationWindow::VisualizationWindow(QWidget *p) : QGLWidget(p) {
 bool VisualizationWindow::initFrames() {
 	FrameBuffer fb("/home/parthmehrotra/Visualization/random.dat", width, height);
 	
-	uint16_t *grayData16 = fb.next();
-	uint8_t *grayData8 = new uint8_t[fb.bufferSize()/sizeof(uint8_t)];
-	for(int i = 0; i < fb.bufferSize() / 2; i++) {
-		grayData8[i] = (uint8_t)grayData16[i];
-	}
+	grayData = fb.next();
 
-	grayData = grayData8;
+	HistogramCluster cluster(width, height, 15, 128, 72, 16);
+	uint16_t *clusters = cluster.doCluster(grayData, 10, 100);
+
+	for (int y = 0; y < 72; y++) {
+		for (int x = 0; x < 128; x++) {
+			cout << unsigned(clusters[x+y*128]) << endl;
+		}
+	}
 
 	return true;
 }
@@ -30,10 +35,6 @@ void VisualizationWindow::initializeGL() {
 	glEnable(GL_TEXTURE_2D);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
-
-	glShadeModel(GL_FLAT);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
 }
 
 void VisualizationWindow::resizeGL(int w, int h) {
@@ -59,6 +60,14 @@ void VisualizationWindow::paintGL() {
 
 	glRasterPos2i(0, 0);
 	glDrawPixels(width, height, GL_LUMINANCE, GL_UNSIGNED_BYTE, grayData);
+
+	glColor4f(1, 0, 0, 0.5);
+	glBegin(GL_QUADS);
+		glVertex2f(5, 5);
+		glVertex2f(100, 5);
+		glVertex2f(100, 100);
+		glVertex2f(5, 100);
+	glEnd();
 
 	glFlush();
 }
