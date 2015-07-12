@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <time.h>
 
+#include <functional>
+
 using namespace std;
 
 VisualizationWindow::VisualizationWindow(QWidget *p) : QGLWidget(p) {
@@ -26,17 +28,15 @@ void VisualizationWindow::createValues() {
 	uint8_t *reversedGrayData = fb.next();
 	grayData = new uint8_t[width*height];
 	
-	for (uint32_t x = 0; x < width; x++) {
-		for (uint32_t y = 0; y < height; y++) {
+	for (uint32_t y = 0; y < height; y++) {
+		for (uint32_t x = 0; x < width; x++) {
 			grayData[x + y * width] = reversedGrayData[x + (height-y) * width];
 		}
 	}
 
 
-	HistogramCluster cluster(width, height, 15, 128, 72, 16);
-	clusters = cluster.doCluster(grayData, 1, 100);
-
-	cout << clusters << endl;
+	HistogramCluster cluster(width, height, 15, 128, 72, 24);
+	clusters = cluster.doCluster(grayData, 10, 100000);
 }
 
 void VisualizationWindow::initializeGL() {
@@ -63,6 +63,13 @@ void VisualizationWindow::resizeGL(int w, int h) {
 	glLoadIdentity();
 }
 
+void getColorFromID(float* r, float* g, float* b, uint16_t value) {
+	srand(value);
+	*r = float(rand() % 256) / 256;
+	*g = float(rand() % 256) / 256;
+	*b = float(rand() % 256) / 256;
+}
+
 void VisualizationWindow::paintGL() {
 	createValues();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -73,20 +80,29 @@ void VisualizationWindow::paintGL() {
 	glRasterPos2i(0, height);
 	glDrawPixels(width, height, GL_LUMINANCE, GL_UNSIGNED_BYTE, grayData);
 
-	for (int _x = 0; _x < width/10; _x++) {
-		for (int _y = 0; _y < height / 10; _y++) {
+	//std::hash<uint16_t> hash;
+
+	int x = 0;
+	int y = 0;
+	int w = 10;
+	int h = 10;
+	for (int _y = 0; _y < height / 10; _y++) {
+		for (int _x = 0; _x < width/10; _x++) {
 
 			int x = _x * 10; 
 			int y = _y * 10;
 
-			int w = width / 10;
-			int h = height / 10;
+			int w = 10;
+			int h = 10;
 
-			cout << "this shit happened" << endl;
-			float value = clusters[_x + _y * w];
+			size_t value = clusters[_x + _y * w];
 
-			cout << "this shit happened" << endl;
-			glColor4f(1, 1, 1, value);
+			cout <<"x: " << x << ", y: " << y <<" " <<  value << endl;
+	
+			float red, green, blue;
+			getColorFromID(&red, &green, &blue, value);
+
+			glColor4f(red, green, blue, 0.5);
 			
 			glBegin(GL_QUADS);
 				glVertex2f(x, y);
