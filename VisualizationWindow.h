@@ -18,4 +18,5 @@ class VisualizationWindow : public QGLWidget {
 		uint32_t height;
 
 		uint8_t *grayData;
+		uint16_t *clusters;
 };
