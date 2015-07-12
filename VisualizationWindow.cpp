@@ -34,9 +34,9 @@ void VisualizationWindow::createValues() {
 
 
 	HistogramCluster cluster(width, height, 15, 128, 72, 16);
-	clusters = cluster.doCluster(grayData, 0, 100);
+	clusters = cluster.doCluster(grayData, 1, 100);
 
-	cout << "created" << endl;
+	cout << clusters << endl;
 }
 
 void VisualizationWindow::initializeGL() {
