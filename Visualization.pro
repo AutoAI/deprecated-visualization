@@ -10,6 +10,6 @@ INCLUDEPATH += .
 CONFIG += C++11
 
 # Input
-HEADERS += VisualizationWindow.h sandbox/Travis/frame_buffer.h sandbox/Travis/histogram_cluster.h
-SOURCES += main.cpp VisualizationWindow.cpp sandbox/Travis/frame_buffer.cc sandbox/Travis/histogram_cluster.cc
+HEADERS += VisualizationWindow.h sandbox/Travis/frame_buffer.h sandbox/Travis/bitmap_loader.h sandbox/Travis/histogram_cluster.h sandbox/Travis/bitmap_image.hpp
+SOURCES += main.cpp VisualizationWindow.cpp sandbox/Travis/frame_buffer.cc sandbox/Travis/bitmap_loader.cc sandbox/Travis/histogram_cluster.cc 
 QT += opengl
