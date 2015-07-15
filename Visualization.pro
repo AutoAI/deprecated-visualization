@@ -10,6 +10,6 @@ INCLUDEPATH += .
 QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra -pedantic
 
 # Input
-HEADERS += VisualizationWindow.h sandbox/Travis/frame_buffer.h sandbox/Travis/bitmap_loader.h sandbox/Travis/histogram_cluster.h sandbox/Travis/bitmap_image.hpp sandbox/Travis/cluster_hash.h
-SOURCES += main.cpp VisualizationWindow.cpp sandbox/Travis/frame_buffer.cc sandbox/Travis/bitmap_loader.cc sandbox/Travis/histogram_cluster.cc sandbox/Travis/cluster_hash.cc
+HEADERS += VisualizationWindow.h frame_buffer.h bitmap_loader.h histogram_cluster.h bitmap_image.hpp cluster_hash.h
+SOURCES += main.cpp VisualizationWindow.cpp frame_buffer.cc bitmap_loader.cc histogram_cluster.cc cluster_hash.cc
 QT += opengl
