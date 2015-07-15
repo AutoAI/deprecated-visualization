@@ -1,3 +1,0 @@
-[submodule "sandbox"]
-	path = sandbox
-	url = git@github.com:DriveAI/sandbox.git
