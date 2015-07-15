@@ -69,7 +69,7 @@ std::unordered_map<int, int> ClusterHash::genMap() {
 
 		// if we don't find a single element even though num_equalities > 0, something went wrong
 		if(!found_an_element) {
-			std::cout << "We thought we had some equalities but we actually didn't! <cluster_hash.cc>" << std::endl;
+			//std::cout << "We thought we had some equalities but we actually didn't! <cluster_hash.cc>" << std::endl;
 		}
 		// extract all things connected to this element and put them in bfs_result and the resulting map
 		for(int i = 0; i < bfs_result.size(); i++) 
@@ -91,34 +91,34 @@ std::unordered_map<int, int> ClusterHash::genMap() {
 }
 
 void ClusterHash::printMatrix() {
-	std::cout << std::endl << "-----------------------------------------------------" << std::endl;
-	std::cout << "matrix ids:" << std::endl;
+	//std::cout << std::endl << "-----------------------------------------------------" << std::endl;
+	//std::cout << "matrix ids:" << std::endl;
 	for(auto it = adjacency_matrix_ids.begin(); it != adjacency_matrix_ids.end(); ++it){
-    	std::cout << it -> first << " -> " << it -> second << std::endl;
+    	//std::cout << it -> first << " -> " << it -> second << std::endl;
     }
-	std::cout << std::endl << "matrix:" << std::endl;
+	//std::cout << std::endl << "matrix:" << std::endl;
 	int temp;
 	std::queue<int>* temp_queue;
 	for(int i = 0; i < adjacency_matrix.size(); i++) {
 		temp_queue = adjacency_matrix[i];
-		std::cout << i << "|";
+		//std::cout << i << "|";
 		if(!temp_queue -> empty()) {
 			temp = temp_queue -> front();
 			temp_queue -> pop();
 			temp_queue -> push(temp);
-			std::cout << temp;
+			//std::cout << temp;
 		} else {
-			std::cout << std::endl;
+			//std::cout << std::endl;
 			break;
 		}
 		for(int j = 0; j < temp_queue -> size() - 1; j++) {
 			temp = temp_queue -> front();
 			temp_queue -> pop();
 			temp_queue -> push(temp);
-			std::cout << ", " << temp;
+			//std::cout << ", " << temp;
 		}
-		std::cout << std::endl;
+		//std::cout << std::endl;
 	}
-	std::cout << "-----------------------------------------------------" << std::endl;
-	std::cout << std::endl;
+	//std::cout << "-----------------------------------------------------" << std::endl;
+	//std::cout << std::endl;
 }

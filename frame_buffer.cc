@@ -10,14 +10,14 @@ FrameBuffer::FrameBuffer(std::string file_name, int x_resolution, int y_resoluti
 	buffer_size = sizeof(uint8_t) * num_pixels;
 	frame_buffer = new uint8_t[buffer_size];
 	if(!frame_buffer) {
-		std::cout << "Failed to allocate buffer" << std::endl;
+		//std::cout << "Failed to allocate buffer" << std::endl;
 		return;
 	}
 
 	// open the file
     is.open(file_name.c_str(), is.binary);
     if(!is.is_open()) {
-    	std::cout << "Failed to open the file." << std::endl;
+    	//std::cout << "Failed to open the file." << std::endl;
     	return;
     }
 
@@ -26,7 +26,7 @@ FrameBuffer::FrameBuffer(std::string file_name, int x_resolution, int y_resoluti
 	int file_size = is.tellg();
 	is.seekg (0, is.beg);
 	if(file_size == 0) {
-		std::cout << "Warning: file size is 0" << std::endl;
+		//std::cout << "Warning: file size is 0" << std::endl;
 	}
 	num_frames = file_size / buffer_size;
 
@@ -44,7 +44,7 @@ uint8_t *FrameBuffer::next() {
 
 	frame_number++;
 	if(frame_buffer == NULL) {
-		std::cout << "BitmapLoader::next() returned NULL!" << std::endl;
+	//	std::cout << "BitmapLoader::next() returned NULL!" << std::endl;
 	}
 	return frame_buffer;
 }

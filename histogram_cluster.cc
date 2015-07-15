@@ -34,7 +34,7 @@ HistogramCluster::HistogramCluster(int x_resolution, int y_resolution, int block
 	// initialize the cluster map buffer
 	cluster_map = new uint16_t[num_blocks_x * num_blocks_y];
 	if(cluster_map == NULL) {
-		std::cout << "Failed to allocate cluster_map <histogram_cluster.cc>" << std::endl;
+		//std::cout << "Failed to allocate cluster_map <histogram_cluster.cc>" << std::endl;
 	}
 	for(int i = 0; i < num_blocks_x * num_blocks_y; i++) {
 		cluster_map[i] = 65535; // uint16_t max value to indicate garbage
@@ -43,10 +43,10 @@ HistogramCluster::HistogramCluster(int x_resolution, int y_resolution, int block
 
 // returns NULL on unsuccessful operation (we had too intense a block to see it properly)
 uint16_t *HistogramCluster::doCluster(uint8_t *frame_buffer, float closeness_threshold, int blindness_threshold) {
-	std::cout << "I ran" << std::endl;
+	//std::cout << "I ran" << std::endl;
 	// CALCULATE HISTOGRAMS BLOCK-BY-BLOCK
 	// (at some point I'd like to change this to pixel-by-pixel, mapping appropriate pixels directy to appropriate bins in block histograms)
-	std::cout << "histograms" << std::endl;
+	//std::cout << "histograms" << std::endl;
 	int max_y, max_x;
 	uint16_t *current_histogram;
 	// iterate over blocks
@@ -68,13 +68,13 @@ uint16_t *HistogramCluster::doCluster(uint8_t *frame_buffer, float closeness_thr
 			}
 			// check if our histogram had too many intensities in the top bin - the scene was too intense and we should probably do something about that
 			if(current_histogram[num_bins - 1] >= blindness_threshold) {
-				std::cout << "HistogramCluster::doCluster returned NULL (we're blind!)" << std::endl;
+				//std::cout << "HistogramCluster::doCluster returned NULL (we're blind!)" << std::endl;
 				return NULL;
 			}
 		}
 	}
 
-	std::cout << "clusters" << std::endl;
+	//std::cout << "clusters" << std::endl;
 	// CALCULATE CLUSTERS
 	uint16_t next_cluster_id = 0;
 	bool left_same;
@@ -86,7 +86,7 @@ uint16_t *HistogramCluster::doCluster(uint8_t *frame_buffer, float closeness_thr
 	uint16_t *current_block;
 	// iterate over blocks
 	for(int block_y = 0; block_y < num_blocks_y; block_y++) {
-		std::cout << "y = " << block_y << ":\t";
+		//std::cout << "y = " << block_y << ":\t";
 		for(int block_x = 0; block_x < num_blocks_x; block_x++) {
 			current_block = histograms[block_y * num_blocks_x + block_x];
 			left_same = false;
@@ -126,16 +126,16 @@ uint16_t *HistogramCluster::doCluster(uint8_t *frame_buffer, float closeness_thr
 			else {
 				cluster_map[block_y * num_blocks_x + block_x] = next_cluster_id++;
 			}
-			std::cout << cluster_map[block_y * num_blocks_x + block_x] << "\t";
+			//std::cout << cluster_map[block_y * num_blocks_x + block_x] << "\t";
 		}
-		std::cout << std::endl;
+		//std::cout << std::endl;
 	}
 
-	std::cout << "processing map" << std::endl;
+	//std::cout << "processing map" << std::endl;
 	// process the map so that all ids in equivalence to one another map to one of those ids - commented out because its not quite ready yet
 	std::unordered_map<int, int> cluster_equivalences = ch.genMap();
 
-	std::cout << "mapping" << std::endl;
+	//std::cout << "mapping" << std::endl;
 	// if values in our map are mapped to something, make them that thing instead so that clusters have 1 id only
 	int size = num_blocks_y * num_blocks_x;
 	for(int i = 0; i < size; i++) {
@@ -145,10 +145,10 @@ uint16_t *HistogramCluster::doCluster(uint8_t *frame_buffer, float closeness_thr
 	}
 
 	if(cluster_map == NULL || cluster_map == 0) {
-		std::cout << "HistogramCluster::doCluster returned NULL!" << std::endl;
+		//std::cout << "HistogramCluster::doCluster returned NULL!" << std::endl;
 	}
 
-	std::cout << cluster_map << std::endl;
+	//std::cout << cluster_map << std::endl;
 	printf("this print statement never executes");
 
 	return cluster_map;

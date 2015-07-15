@@ -2,8 +2,8 @@
 
 #include "VisualizationWindow.h"
 
-#include "sandbox/Travis/bitmap_loader.h"
-#include "sandbox/Travis/histogram_cluster.h"
+#include "bitmap_loader.h"
+#include "histogram_cluster.h"
 
 #include <stdlib.h>
 
