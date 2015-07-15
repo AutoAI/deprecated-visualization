@@ -149,7 +149,7 @@ uint16_t *HistogramCluster::doCluster(uint8_t *frame_buffer, float closeness_thr
 	}
 
 	//std::cout << cluster_map << std::endl;
-	printf("this print statement never executes");
+	//printf("this print statement never executes");
 
 	return cluster_map;
 }
