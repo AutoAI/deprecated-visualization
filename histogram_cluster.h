@@ -1,5 +1,8 @@
 // histogram_cluster.h
 
+#if !defined(_HISTOGRAM_CLUSTER_H)
+#define _HISTOGRAM_CLUSTER_H
+
 #pragma once
 
 #include <stdint.h>
@@ -25,3 +28,6 @@ private:
 	uint16_t *cluster_map;
 	float chiSquareDifference(uint16_t *histogram_P, uint16_t *histogram_Q);
 };
+
+#endif    // _HISTOGRAM_CLUSTER_H
+

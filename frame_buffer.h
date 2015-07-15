@@ -1,5 +1,8 @@
 // frame_buffer.h
 
+#if !defined(_FRAME_BUFFER_H)
+#define _FRAME_BUFFER_H
+
 #include <stdint.h>
 #include <cstdlib>
 #include <fstream>
@@ -21,3 +24,6 @@ private:
 	int num_pixels;
 	int buffer_size;
 };
+
+#endif    // _FRAME_BUFFER_H
+

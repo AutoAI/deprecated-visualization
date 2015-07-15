@@ -1,5 +1,8 @@
 // cluster_hash.h
 
+#if !defined(_CLUSTER_HASH_H)
+#define _CLUSTER_HASH_H
+
 #pragma once
 
 #include <unordered_map>
@@ -21,3 +24,6 @@ private:
 
 	void printMatrix();
 };
+
+#endif    // _CLUSTER_HASH_H
+
