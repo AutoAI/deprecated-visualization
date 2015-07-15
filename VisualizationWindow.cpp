@@ -12,8 +12,6 @@
 
 #include <functional>
 
-using namespace std;
-
 VisualizationWindow::VisualizationWindow(QWidget *p) : QGLWidget(p) {
 	width = 1280;
 	height = 720;
@@ -21,7 +19,15 @@ VisualizationWindow::VisualizationWindow(QWidget *p) : QGLWidget(p) {
 	clusters = NULL;
 }
 
-void VisualizationWindow::createValues() {
+void VisualizationWindow::createValues(int block_dimension, int num_blocks_x, int num_blocks_y, int num_bins, float closeness_threshold, int blindness_threshold) {
+
+	this -> block_dimension = block_dimension;
+	this -> num_blocks_x = num_blocks_x;
+	this -> num_blocks_y = num_blocks_y;
+	this -> num_bins = num_bins;
+	this -> closeness_threshold = closeness_threshold;
+	this -> blindness_threshold = blindness_threshold;
+
 	srand(time(NULL));
 	BitmapLoader fb("/home/parthmehrotra/Visualization/road.bmp", width, height);
 	
@@ -35,8 +41,15 @@ void VisualizationWindow::createValues() {
 	}
 
 
-	HistogramCluster cluster(width, height, 15, 128, 72, 24);
-	clusters = cluster.doCluster(grayData, 10, 100000);
+	clusters = new uint16_t[num_blocks_x*num_blocks_y];
+	HistogramCluster cluster(width, height, block_dimension, num_blocks_x, num_blocks_y, num_bins);
+
+	uint16_t *reversed_clusters = cluster.doCluster(grayData, closeness_threshold, blindness_threshold);
+	for (uint32_t y = 0; y < num_blocks_y; y++) {
+		for (uint32_t x = 0; x < num_blocks_x; x++) {
+			clusters[y * num_blocks_x + x] = reversed_clusters[x + (num_blocks_y - y) * num_blocks_x];
+		}
+	}
 }
 
 void VisualizationWindow::initializeGL() {
@@ -65,13 +78,12 @@ void VisualizationWindow::resizeGL(int w, int h) {
 
 void getColorFromID(float* r, float* g, float* b, uint16_t value) {
 	srand(value);
-	*r = float(rand() % 256) / 256;
-	*g = float(rand() % 256) / 256;
-	*b = float(rand() % 256) / 256;
+	*r = (rand() % 256) / 256.0; 
+	*g = (rand() % 256) / 256.0; 
+	*b = (rand() % 256) / 256.0; 
 }
 
 void VisualizationWindow::paintGL() {
-	createValues();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	glMatrixMode(GL_MODELVIEW);
@@ -80,35 +92,33 @@ void VisualizationWindow::paintGL() {
 	glRasterPos2i(0, height);
 	glDrawPixels(width, height, GL_LUMINANCE, GL_UNSIGNED_BYTE, grayData);
 
-	//std::hash<uint16_t> hash;
+	int num_blocks_x = width / block_dimension;
+	int num_blocks_y = height / block_dimension;
 
-	int x = 0;
-	int y = 0;
-	int w = 10;
-	int h = 10;
-	for (int _y = 0; _y < height / 10; _y++) {
-		for (int _x = 0; _x < width/10; _x++) {
+	for (int x = 0; x < num_blocks_x; x++) {
+		for (int y = 0; y < num_blocks_y; y++) {
 
-			int x = _x * 10; 
-			int y = _y * 10;
+			int _x = x * block_dimension; 
+			int _y = y * block_dimension;
 
-			int w = 10;
-			int h = 10;
+			size_t value = clusters[y * num_blocks_x + x];
 
-			size_t value = clusters[_x + _y * w];
-
-			cout <<"x: " << x << ", y: " << y <<" " <<  value << endl;
-	
 			float red, green, blue;
 			getColorFromID(&red, &green, &blue, value);
 
 			glColor4f(red, green, blue, 0.5);
 			
+			glBegin(GL_LINE_LOOP);
+				glVertex2f(_x, _y);
+				glVertex2f(_x + block_dimension, _y);
+				glVertex2f(_x + block_dimension, _y + block_dimension);
+				glVertex2f(_x, _y + block_dimension);
+			glEnd();
 			glBegin(GL_QUADS);
-				glVertex2f(x, y);
-				glVertex2f(x + w, y);
-				glVertex2f(x + w, y + h);
-				glVertex2f(x, y + h);
+				glVertex2f(_x, _y);
+				glVertex2f(_x + block_dimension, _y);
+				glVertex2f(_x + block_dimension, _y + block_dimension);
+				glVertex2f(_x, _y + block_dimension);
 			glEnd();
 		}
 	}
