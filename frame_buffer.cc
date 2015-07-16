@@ -4,10 +4,10 @@
 
 #include <iostream>
 
-FrameBuffer::FrameBuffer(std::string file_name, int x_resolution, int y_resolution) {
+FrameBuffer::FrameBuffer(std::string file_name, int x_resolution, int y_resolution, char num_channels) {
 	// dynamically allocate the frame buffer
 	num_pixels = x_resolution * y_resolution;
-	buffer_size = sizeof(uint8_t) * num_pixels;
+	buffer_size = sizeof(uint8_t) * num_pixels * num_channels;
 	frame_buffer = new uint8_t[buffer_size];
 	if(!frame_buffer) {
 		//std::cout << "Failed to allocate buffer" << std::endl;

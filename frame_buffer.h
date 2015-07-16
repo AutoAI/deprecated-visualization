@@ -10,7 +10,7 @@
 
 class FrameBuffer {
 public:
-	FrameBuffer(std::string file_name, int x_resolution, int y_resolution);
+	FrameBuffer(std::string file_name, int x_resolution, int y_resolution, char num_channels);
 	uint8_t *next();
 	bool hasNext();
 	int numFrames();
@@ -26,4 +26,3 @@ private:
 };
 
 #endif    // _FRAME_BUFFER_H
-

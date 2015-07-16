@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
 		// start timing the program
 		std::clock_t program_start_time = std::clock();
 
-		FrameBuffer fb(file_name, x_resolution, y_resolution);
+		FrameBuffer fb(file_name, x_resolution, y_resolution, 1);
 
 		while(fb.hasNext()) {
 			fb.next();
@@ -55,8 +55,8 @@ int main(int argc, char *argv[]) {
 		// start timing the program
 		std::clock_t program_start_time = std::clock();
 
-		BitmapLoader bl("road.bmp", x_resolution, y_resolution);
-		HistogramCluster hc(x_resolution, y_resolution, 15, x_resolution/80, y_resolution/40, 24);
+		BitmapLoader bl("road.bmp", x_resolution, y_resolution, 1);
+		HistogramCluster hc(x_resolution, y_resolution, 1, 15, x_resolution/80, y_resolution/40, 24);
 		uint16_t *clusters = hc.doCluster(bl.next(), 200, 100);
 
 		// print the program's run duration
