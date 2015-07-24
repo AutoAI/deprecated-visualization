@@ -10,14 +10,17 @@
 
 class BitmapLoader {
 public:
+  BitmapLoader(std::string file_name, int x_resolution, int y_resolution);
   BitmapLoader(std::string file_name, int x_resolution, int y_resolution, char num_channels);
-  uint8_t *next();
+  uint32_t *next32();
+  uint8_t *next8();
   bool hasNext();
   int numFrames();
   int bufferSize();
 
 private:
-  uint8_t *frame_buffer;
+  uint32_t *frame_buffer_32;
+  uint8_t *frame_buffer_8;
   std::ifstream is;
   int frame_number;
   int num_frames;

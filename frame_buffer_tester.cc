@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 		FrameBuffer fb(file_name, x_resolution, y_resolution, 1);
 
 		while(fb.hasNext()) {
-			fb.next();
+			fb.next8();
 		}
 
 		// print the program's run duration
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
 
 		BitmapLoader bl("road.bmp", x_resolution, y_resolution, 1);
 		HistogramCluster hc(x_resolution, y_resolution, 1, 15, x_resolution/80, y_resolution/40, 24);
-		uint16_t *clusters = hc.doCluster(bl.next(), 200, 100);
+		uint16_t *clusters = hc.doCluster(bl.next8(), 200, 100);
 
 		// print the program's run duration
 		double program_duration = (std::clock() - program_start_time) / (double) CLOCKS_PER_SEC;
