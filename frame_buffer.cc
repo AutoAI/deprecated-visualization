@@ -41,14 +41,14 @@ FrameBuffer::FrameBuffer(std::string file_name, int x_resolution, int y_resoluti
 	frame_buffer_8 = new uint8_t[num_pixels * num_channels];
 	frame_buffer_32 = NULL;
 	if(!frame_buffer_8) {
-		//std::cout << "Failed to allocate buffer" << std::endl;
+		std::cout << "Failed to allocate buffer" << std::endl;
 		return;
 	}
 
 	// open the file
     is.open(file_name.c_str(), is.binary);
     if(!is.is_open()) {
-    	//std::cout << "Failed to open the file." << std::endl;
+    	std::cout << "Failed to open the file." << std::endl;
     	return;
     }
 
@@ -57,7 +57,7 @@ FrameBuffer::FrameBuffer(std::string file_name, int x_resolution, int y_resoluti
 	int file_size = is.tellg();
 	is.seekg (0, is.beg);
 	if(file_size == 0) {
-		//std::cout << "Warning: file size is 0" << std::endl;
+		std::cout << "Warning: file size is 0" << std::endl;
 	}
 	num_frames = file_size / buffer_size;
 

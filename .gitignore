@@ -1,3 +1,5 @@
 *.o
 *.bin
 *.swp
+*.dSYM
+moc_*
