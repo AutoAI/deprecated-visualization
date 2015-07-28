@@ -12,7 +12,7 @@ HistogramCluster::HistogramCluster(int x_resolution, int y_resolution, int block
 	// copy parameters to class variables
 	this -> x_resolution = x_resolution;
 	this -> y_resolution = y_resolution;
-	this -> num_channels = 1;
+	this -> num_channels = 4;
 	this -> block_dimension = block_dimension;
 	this -> num_blocks_x = num_blocks_x;
 	this -> num_blocks_y = num_blocks_y;
@@ -27,7 +27,7 @@ HistogramCluster::HistogramCluster(int x_resolution, int y_resolution, int block
 	// initialize the histogram buffer
 
 	int total_blocks = num_blocks_x * num_blocks_y;
-	histograms = new uint16_t*[num_blocks_x * num_blocks_y * num_channels];
+	histograms = new uint16_t*[total_blocks * num_channels];
 	for(int channel = 0; channel < num_channels; channel++) {
 		for(int y = 0; y < num_blocks_y; y++) {
 			for(int x = 0; x < num_blocks_x; x++) {
@@ -65,7 +65,7 @@ HistogramCluster::HistogramCluster(int x_resolution, int y_resolution, char num_
 	// initialize the histogram buffer
 
 	int total_blocks = num_blocks_x * num_blocks_y;
-	histograms = new uint16_t*[num_blocks_x * num_blocks_y * num_channels];
+	histograms = new uint16_t*[total_blocks * num_channels];
 	for(int channel = 0; channel < num_channels; channel++) {
 		for(int y = 0; y < num_blocks_y; y++) {
 			for(int x = 0; x < num_blocks_x; x++) {
@@ -117,15 +117,15 @@ uint16_t *HistogramCluster::doCluster(uint32_t *frame_buffer, float closeness_th
 			}
 			// check if our histogram had too many intensities in the top bin - the scene was too intense and we should probably do something about that
 			if(current_histogram_r[num_bins - 1] >= blindness_threshold) {
-				std::cout << "Too many pixel intensities in top bin of histogram! <histogram_cluster.cc>" << std::endl;
+				std::cout << "Too many pixel intensities in top bin of red histogram! <histogram_cluster.cc>" << std::endl;
 				// return NULL;
 			}
 			if(current_histogram_g[num_bins - 1] >= blindness_threshold) {
-				std::cout << "Too many pixel intensities in top bin of histogram! <histogram_cluster.cc>" << std::endl;
+				std::cout << "Too many pixel intensities in top bin of green histogram! <histogram_cluster.cc>" << std::endl;
 				// return NULL;
 			}
 			if(current_histogram_b[num_bins - 1] >= blindness_threshold) {
-				std::cout << "Too many pixel intensities in top bin of histogram! <histogram_cluster.cc>" << std::endl;
+				std::cout << "Too many pixel intensities in top bin of blue histogram! <histogram_cluster.cc>" << std::endl;
 				// return NULL;
 			}
 		}

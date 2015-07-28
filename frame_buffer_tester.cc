@@ -14,7 +14,8 @@
 #include "cluster_hash.h"
 
 const bool buffer_test = false;
-const bool cluster_test = true;
+const bool cluster_test = false;
+const bool cluster_test_color = true;
 const bool hash_test = false;
 
 int main(int argc, char *argv[]) {
@@ -58,6 +59,20 @@ int main(int argc, char *argv[]) {
 		BitmapLoader bl("road.bmp", x_resolution, y_resolution, 1);
 		HistogramCluster hc(x_resolution, y_resolution, 1, 15, x_resolution/80, y_resolution/40, 24);
 		uint16_t *clusters = hc.doCluster(bl.next8(), 200, 100);
+
+		// print the program's run duration
+		double program_duration = (std::clock() - program_start_time) / (double) CLOCKS_PER_SEC;
+		std::cout << "Clustered " << x_resolution * y_resolution / 6400 << " blocks in " << program_duration << " seconds (" << x_resolution * y_resolution / (6400 * program_duration) << " blocks per second)." << std::endl << std::endl;
+	}
+
+	if(cluster_test_color) {
+		std::cout << "Cluster Test:" << std::endl;
+		// start timing the program
+		std::clock_t program_start_time = std::clock();
+
+		BitmapLoader bl("road.bmp", x_resolution, y_resolution);
+		HistogramCluster hc(x_resolution, y_resolution, 15, x_resolution/80, y_resolution/40, 24);
+		uint16_t *clusters = hc.doCluster(bl.next32(), 200, 100);
 
 		// print the program's run duration
 		double program_duration = (std::clock() - program_start_time) / (double) CLOCKS_PER_SEC;
