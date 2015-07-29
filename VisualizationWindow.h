@@ -5,31 +5,31 @@
 #define _VISUALIZATIONWINDOW_H
 
 class VisualizationWindow : public QGLWidget {
-  Q_OBJECT
+Q_OBJECT
 
-  public:
-    VisualizationWindow(QWidget *p = 0);
-    void createValues(int block_dimension, int num_blocks_x, int num_blocks_y, int num_bins, float closeness_threshold, int blindness_threshold);
-  
-  protected:
-    void initializeGL();
-    void resizeGL(int w, int h);
-    void paintGL();
+public:
+	VisualizationWindow(QWidget *p = 0);
+	void createValues(int block_dimension, int num_blocks_x, int num_blocks_y, int num_bins, float closeness_threshold, int blindness_threshold);
 
-  private:
-    uint32_t width;
-    uint32_t height;
+protected:
+	void initializeGL();
+	void resizeGL(int w, int h);
+	void paintGL();
 
-    uint8_t *grayData;
-    uint16_t *clusters;
+private:
+	uint32_t width;
+	uint32_t height;
 
-    int block_dimension; 
-    int num_blocks_x; 
-    int num_blocks_y; 
-    int num_bins; 
-    float closeness_threshold; 
-    int blindness_threshold;
+	uint8_t *grayData;
+	uint16_t *clusters;
+
+	int block_dimension; 
+	int num_blocks_x; 
+	int num_blocks_y; 
+	int num_bins; 
+	float closeness_threshold; 
+	int blindness_threshold;
 };
 
-#endif      // _VISUALIZATIONWINDOW_H
+#endif			// _VISUALIZATIONWINDOW_H
 
