@@ -20,7 +20,7 @@ BitmapLoader::BitmapLoader(std::string file_name, int x_resolution, int y_resolu
 		std::cout << "Failed to allocate memory for image! <bitmap_loader.cpp>" << std::endl;
 	}
 	unsigned char r, g, b;
-	for(int i = 0; i < num_pixels; i += 4) {
+	for(int i = 0; i < num_pixels; i++) {
 		image -> get_pixel(i % x_resolution, i / x_resolution, r, g, b);
 		// load with red as most significant digits
 		frame_buffer_32[i] = (r << 24) + (g << 16) + (b << 8) + 255;
