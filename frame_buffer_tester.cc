@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 	int y_resolution = std::atoi(argv[3]);
 
 	if(buffer_test){
-		std::cout << "Buffer Test:" << std::endl;
+		std::cout << std::endl << "Buffer Test:" << std::endl;
 		// start timing the program
 		std::clock_t program_start_time = std::clock();
 
@@ -48,11 +48,11 @@ int main(int argc, char *argv[]) {
 
 		// print the program's run duration
 		double program_duration = (std::clock() - program_start_time) / (double) CLOCKS_PER_SEC;
-		std::cout << "Loaded " << fb.numFrames() << " frames in " << program_duration << " seconds (" << fb.numFrames() / program_duration << " frames per second)." << std::endl << std::endl;
+		std::cout << "Loaded " << fb.numFrames() << " frames in " << program_duration << " seconds (" << fb.numFrames() / program_duration << " frames per second)." << std::endl;
 	}
 
 	if(cluster_test) {
-		std::cout << "Cluster Test:" << std::endl;
+		std::cout << std::endl << "Cluster Test B+W:" << std::endl;
 		// start timing the program
 		std::clock_t program_start_time = std::clock();
 
@@ -62,25 +62,25 @@ int main(int argc, char *argv[]) {
 
 		// print the program's run duration
 		double program_duration = (std::clock() - program_start_time) / (double) CLOCKS_PER_SEC;
-		std::cout << "Clustered " << x_resolution * y_resolution / 6400 << " blocks in " << program_duration << " seconds (" << x_resolution * y_resolution / (6400 * program_duration) << " blocks per second)." << std::endl << std::endl;
+		std::cout << "Clustered " << x_resolution * y_resolution / 6400 << " blocks in " << program_duration << " seconds (" << x_resolution * y_resolution / (6400 * program_duration) << " blocks per second)." << std::endl;
 	}
 
 	if(cluster_test_color) {
-		std::cout << "Cluster Test:" << std::endl;
+		std::cout << std::endl << "Cluster Test Color:" << std::endl;
 		// start timing the program
 		std::clock_t program_start_time = std::clock();
 
 		BitmapLoader bl("road.bmp", x_resolution, y_resolution);
 		HistogramCluster hc(x_resolution, y_resolution, 15, x_resolution/80, y_resolution/40, 24);
-		uint16_t *clusters = hc.doCluster(bl.next32(), 200, 100);
+		uint16_t *clusters = hc.doCluster(bl.next32(), 200, 300);
 
 		// print the program's run duration
 		double program_duration = (std::clock() - program_start_time) / (double) CLOCKS_PER_SEC;
-		std::cout << "Clustered " << x_resolution * y_resolution / 6400 << " blocks in " << program_duration << " seconds (" << x_resolution * y_resolution / (6400 * program_duration) << " blocks per second)." << std::endl << std::endl;
+		std::cout << "Clustered " << x_resolution * y_resolution / 6400 << " blocks in " << program_duration << " seconds (" << x_resolution * y_resolution / (6400 * program_duration) << " blocks per second)." << std::endl;
 	}
 
 	if(hash_test) {
-		std::cout << "Hash Test:" << std::endl;
+		std::cout << std::endl << "Hash Test:" << std::endl;
 		// start timing the program
 		std::clock_t program_start_time = std::clock();
 
