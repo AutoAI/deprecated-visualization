@@ -20,7 +20,6 @@ VisualizationWindow::VisualizationWindow(QWidget *p) : QGLWidget(p) {
 }
 
 void VisualizationWindow::createValues(int block_dimension, int num_blocks_x, int num_blocks_y, int num_bins, float closeness_threshold, int blindness_threshold) {
-
 	this -> block_dimension = block_dimension;
 	this -> num_blocks_x = num_blocks_x;
 	this -> num_blocks_y = num_blocks_y;
@@ -90,16 +89,16 @@ void VisualizationWindow::paintGL() {
 
 	glRasterPos2i(0, height);
 
-  glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, image);
+	glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, image);
 
-	int num_blocks_x = width / block_dimension;
-	int num_blocks_y = height / block_dimension;
+	std::cout << num_blocks_x << std::endl;
+	std::cout << num_blocks_y << std::endl;
 
 	for (int x = 0; x < num_blocks_x; x++) {
 		for (int y = 0; y < num_blocks_y; y++) {
 
-			int _x = x * block_dimension; 
-			int _y = y * block_dimension;
+			int _x = x * width / num_blocks_x; 
+			int _y = y * height / num_blocks_y; 
 
 			size_t value = clusters[y * num_blocks_x + x];
 
@@ -110,15 +109,15 @@ void VisualizationWindow::paintGL() {
 			
 			glBegin(GL_LINE_LOOP);
 				glVertex2f(_x, _y);
-				glVertex2f(_x + block_dimension, _y);
-				glVertex2f(_x + block_dimension, _y + block_dimension);
-				glVertex2f(_x, _y + block_dimension);
+				glVertex2f(_x + width / num_blocks_x, _y);
+				glVertex2f(_x + width / num_blocks_x, _y + height/num_blocks_y);
+				glVertex2f(_x, _y + height/num_blocks_y);
 			glEnd();
 			glBegin(GL_QUADS);
 				glVertex2f(_x, _y);
-				glVertex2f(_x + block_dimension, _y);
-				glVertex2f(_x + block_dimension, _y + block_dimension);
-				glVertex2f(_x, _y + block_dimension);
+				glVertex2f(_x + width / num_blocks_x, _y);
+				glVertex2f(_x + width / num_blocks_x, _y + height / num_blocks_y);
+				glVertex2f(_x, _y + height / num_blocks_y);
 			glEnd();
 		}
 	}

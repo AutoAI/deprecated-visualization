@@ -17,9 +17,9 @@ int main(int argc, char *argv[]) {
 	int width = atoi(argv[1]);
 	int height = atoi(argv[2]);
 	int block_dimensions = atoi(argv[3]);
-	int num_blocks = atoi(argv[4]);
-	int num_blocks_x = atoi(argv[5]);
-	int num_blocks_y = atoi(argv[6]);
+	int num_blocks_x = atoi(argv[4]);
+	int num_blocks_y = atoi(argv[5]);
+	int num_bins = atoi(argv[6]);
 	int closeness_threshold = atoi(argv[7]);
 	int blindness_threshold = atoi(argv[8]);
 		
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 
 	vw.resize(WIDTH, HEIGHT);
 
-	vw.createValues(10, WIDTH/10, HEIGHT/10, 24, 35, 1000);
+	vw.createValues(block_dimensions, num_blocks_x, num_blocks_y, num_bins, closeness_threshold, blindness_threshold);
 	vw.show();
 	vw.update();
 
