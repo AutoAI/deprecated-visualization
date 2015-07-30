@@ -15,7 +15,7 @@
 VisualizationWindow::VisualizationWindow(QWidget *p) : QGLWidget(p) {
 	width = 1280;
 	height = 720;
-	grayData = NULL;
+	image = NULL;
 	clusters = NULL;
 }
 
@@ -29,23 +29,21 @@ void VisualizationWindow::createValues(int block_dimension, int num_blocks_x, in
 	this -> blindness_threshold = blindness_threshold;
 
 	srand(time(NULL));
-//	BitmapLoader fb("/home/parthmehrotra/Visualization/road.bmp", width, height);
 	BitmapLoader fb("road.bmp", width, height);
 	
-	uint8_t *reversedGrayData = fb.next();
-	grayData = new uint8_t[width*height];
+	uint32_t *reversed_image = fb.next32();
+	image = new uint32_t[width*height];
 	
 	for (uint32_t y = 0; y < height; y++) {
 		for (uint32_t x = 0; x < width; x++) {
-			grayData[x + y * width] = reversedGrayData[x + (height-y) * width];
+			image[x + y * width] = reversed_image[x + (height-y) * width];
 		}
 	}
-
 
 	clusters = new uint16_t[num_blocks_x*num_blocks_y];
 	HistogramCluster cluster(width, height, block_dimension, num_blocks_x, num_blocks_y, num_bins);
 
-	uint16_t *reversed_clusters = cluster.doCluster(grayData, closeness_threshold, blindness_threshold);
+	uint16_t *reversed_clusters = cluster.doCluster(image, closeness_threshold, blindness_threshold);
 	for (uint32_t y = 0; y < num_blocks_y; y++) {
 		for (uint32_t x = 0; x < num_blocks_x; x++) {
 			clusters[y * num_blocks_x + x] = reversed_clusters[x + (num_blocks_y - y) * num_blocks_x];
@@ -91,7 +89,8 @@ void VisualizationWindow::paintGL() {
 	glLoadIdentity();
 
 	glRasterPos2i(0, height);
-	glDrawPixels(width, height, GL_LUMINANCE, GL_UNSIGNED_BYTE, grayData);
+
+  glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, image);
 
 	int num_blocks_x = width / block_dimension;
 	int num_blocks_y = height / block_dimension;

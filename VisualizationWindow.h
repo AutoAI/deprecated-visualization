@@ -20,7 +20,8 @@ private:
 	uint32_t width;
 	uint32_t height;
 
-	uint8_t *grayData;
+	//uint8_t *grayData;
+	uint32_t *image;
 	uint16_t *clusters;
 
 	int block_dimension; 
