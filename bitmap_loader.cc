@@ -21,7 +21,7 @@ BitmapLoader::BitmapLoader(std::string file_name, int x_resolution, int y_resolu
 	}
 	unsigned char r, g, b;
 	for(int i = 0; i < num_pixels; i++) {
-		image -> get_pixel(i % x_resolution, i / x_resolution, r, g, b);
+		image -> get_pixel(i % x_resolution, (num_pixels - i - 1) / x_resolution, r, g, b);
 		// load with red as most significant digits
 		frame_buffer_32[i] = (r << 24) + (g << 16) + (b << 8) + 255;
 	}
@@ -46,14 +46,14 @@ BitmapLoader::BitmapLoader(std::string file_name, int x_resolution, int y_resolu
 	// black and white
 	if(num_channels == 1) {
 		for(int i = 0; i < num_pixels; i++) {
-			image -> get_pixel(i % x_resolution, i / x_resolution, r, g, b);
+			image -> get_pixel(i % x_resolution, (num_pixels - i - 1) / x_resolution, r, g, b);
 			frame_buffer_8[i] = r / 3 + b / 3 + g / 3;
 		}
 	} else
 	// color
 	if(num_channels == 3) {
 		for(int i = 0; i < num_pixels; i++) {
-			image -> get_pixel(i % x_resolution, i / x_resolution, r, g, b);
+			image -> get_pixel(i % x_resolution, (num_pixels - i - 1) / x_resolution, r, g, b);
 			frame_buffer_8[i] = r;
 			frame_buffer_8[i + num_pixels] = g;
 			frame_buffer_8[i + num_pixels + num_pixels] = b;
@@ -62,7 +62,7 @@ BitmapLoader::BitmapLoader(std::string file_name, int x_resolution, int y_resolu
 	// color + alpha
 	if(num_channels == 4) {
 		for(int i = 0; i < num_pixels; i++) {
-			image -> get_pixel(i % x_resolution, i / x_resolution, r, g, b);
+			image -> get_pixel(i % x_resolution, (num_pixels - i - 1) / x_resolution, r, g, b);
 			frame_buffer_8[i] = r;
 			frame_buffer_8[i + num_pixels] = g;
 			frame_buffer_8[i + num_pixels + num_pixels] = b;

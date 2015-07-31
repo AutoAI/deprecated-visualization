@@ -29,7 +29,7 @@ private:
 	uint16_t **histograms;
 	// cluster map - each block gets a unit16_t to identify which cluster it belongs to
 	uint16_t *cluster_map;
-	float chiSquareDifference(int index_p, int index_q);
+	float meanStdevDifference(int index_p, int index_q);
 };
 
 #endif    // _HISTOGRAM_CLUSTER_H

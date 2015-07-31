@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 #include <iostream>
+#include <math.h>
 
 #include "cluster_hash.h"
 
@@ -39,7 +40,7 @@ HistogramCluster::HistogramCluster(int x_resolution, int y_resolution, int block
 	// initialize the cluster map buffer
 	cluster_map = new uint16_t[num_blocks_x * num_blocks_y];
 	if(cluster_map == NULL) {
-		//std::cout << "Failed to allocate cluster_map <histogram_cluster.cc>" << std::endl;
+		std::cout << "Failed to allocate cluster_map <histogram_cluster.cc>" << std::endl;
 	}
 	for(int i = 0; i < num_blocks_x * num_blocks_y; i++) {
 		cluster_map[i] = 65535; // uint16_t max value to indicate garbage
@@ -63,7 +64,6 @@ HistogramCluster::HistogramCluster(int x_resolution, int y_resolution, char num_
 	increment_y = block_dimension - total_overlap_y / (num_blocks_y - 1);
 
 	// initialize the histogram buffer
-
 	int total_blocks = num_blocks_x * num_blocks_y;
 	histograms = new uint16_t*[total_blocks * num_channels];
 	for(int channel = 0; channel < num_channels; channel++) {
@@ -77,7 +77,7 @@ HistogramCluster::HistogramCluster(int x_resolution, int y_resolution, char num_
 	// initialize the cluster map buffer
 	cluster_map = new uint16_t[num_blocks_x * num_blocks_y];
 	if(cluster_map == NULL) {
-		//std::cout << "Failed to allocate cluster_map <histogram_cluster.cc>" << std::endl;
+		std::cout << "Failed to allocate cluster_map <histogram_cluster.cc>" << std::endl;
 	}
 	for(int i = 0; i < num_blocks_x * num_blocks_y; i++) {
 		cluster_map[i] = 65535; // uint16_t max value to indicate garbage
@@ -92,6 +92,7 @@ uint16_t *HistogramCluster::doCluster(uint32_t *frame_buffer, float closeness_th
 	uint16_t *current_histogram_r;
 	uint16_t *current_histogram_g;
 	uint16_t *current_histogram_b;
+
 	// iterate over blocks
 	for(int block_y = 0; block_y < num_blocks_y; block_y++) {
 		for(int block_x = 0; block_x < num_blocks_x; block_x++) {
@@ -152,10 +153,11 @@ uint16_t *HistogramCluster::doCluster(uint32_t *frame_buffer, float closeness_th
 			// check to see if this block should be in the same cluster as the one to the left
 			if(block_x != 0) {
 				chi_square_difference = 0;
-				for(int channel = 0; channel < num_channels; channel++) {
-					temp = chiSquareDifference(index + channel * total_blocks, index_left);
+				for(int channel = 0; channel < 3; channel++) {
+					temp = meanStdevDifference(index + channel * total_blocks, index_left + channel * total_blocks);
 					chi_square_difference += temp * temp;
 				}
+				chi_square_difference = sqrt(chi_square_difference / 3);
 				if(chi_square_difference < closeness_threshold) {
 					left_same = true;
 				}
@@ -163,10 +165,11 @@ uint16_t *HistogramCluster::doCluster(uint32_t *frame_buffer, float closeness_th
 			// check to see if this block should be in the same cluster as the one above
 			if(block_y != 0) {
 				chi_square_difference = 0;
-				for(int channel = 0; channel < num_channels; channel++) {
-					temp = chiSquareDifference(index + channel * total_blocks, index_top);
+				for(int channel = 0; channel < 3; channel++) {
+					temp = meanStdevDifference(index + channel * total_blocks, index_top + channel * total_blocks);
 					chi_square_difference += temp * temp;
 				}
+				chi_square_difference = sqrt(chi_square_difference / 3);
 				if(chi_square_difference < closeness_threshold) {
 					top_same = true;
 				}
@@ -263,7 +266,7 @@ uint16_t *HistogramCluster::doCluster(uint8_t *frame_buffer, float closeness_thr
 			if(block_x != 0) {
 				chi_square_difference = 0;
 				for(int channel = 0; channel < num_channels; channel++) {
-					temp = chiSquareDifference(index + channel * total_blocks, index_left);
+					temp = meanStdevDifference(index + channel * total_blocks, index_left);
 					chi_square_difference += temp * temp;
 				}
 				if(chi_square_difference < closeness_threshold) {
@@ -274,7 +277,7 @@ uint16_t *HistogramCluster::doCluster(uint8_t *frame_buffer, float closeness_thr
 			if(block_y != 0) {
 				chi_square_difference = 0;
 				for(int channel = 0; channel < num_channels; channel++) {
-					temp = chiSquareDifference(index + channel * total_blocks, index_top);
+					temp = meanStdevDifference(index + channel * total_blocks, index_top);
 					chi_square_difference += temp * temp;
 				}
 				if(chi_square_difference < closeness_threshold) {
@@ -318,15 +321,32 @@ uint16_t *HistogramCluster::doCluster(uint8_t *frame_buffer, float closeness_thr
 	return cluster_map;
 }
 
-// technically this returns 2 * the chi square difference, but we're just comparing them so it doesn't matter
-float HistogramCluster::chiSquareDifference(int index_p, int index_q) {
-	uint16_t *histogram_P = histograms[index_p];
-	uint16_t *histogram_Q = histograms[index_q];
-	float difference = 0;
-	for(int bin = 0; bin < num_bins; bin++) {
-		if(histogram_P[bin] + histogram_Q[bin] != 0) {
-			difference += float(histogram_P[bin] - histogram_Q[bin]) * (histogram_P[bin] - histogram_Q[bin]) / float(histogram_P[bin] + histogram_Q[bin]);
-		}
+float HistogramCluster::meanStdevDifference(int index_p, int index_q) {
+	uint16_t *histogram_p = histograms[index_p];
+	uint16_t *histogram_q = histograms[index_q];
+	
+	float sum_p = 0;
+	float sum_q = 0;
+	
+	for(int i = 0; i < num_bins; i++) {
+		sum_p += histogram_p[i] * i;
+		sum_q += histogram_q[i] * i;
 	}
-	return difference;
+
+	float mean_p = sum_p / float(num_bins);
+	float mean_q = sum_q / float(num_bins);
+
+	float stdev_p = 0;
+	float stdev_q = 0;
+
+	for(int i = 0; i < num_bins; i++) {
+		stdev_p += (histogram_p[i] - mean_p) * (histogram_p[i] - mean_p);
+		stdev_q += (histogram_q[i] - mean_q) * (histogram_q[i] - mean_q);
+	}
+
+	stdev_p = sqrt(stdev_p / num_bins);
+	stdev_q = sqrt(stdev_q / num_bins);
+
+	float difference = (stdev_p - stdev_q) * (mean_p - mean_q);
+	return log(difference * difference + 1);
 }

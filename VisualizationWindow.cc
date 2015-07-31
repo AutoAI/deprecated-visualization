@@ -6,10 +6,8 @@
 #include "histogram_cluster.h"
 
 #include <stdlib.h>
-
 #include <stdio.h>
 #include <time.h>
-
 #include <functional>
 
 VisualizationWindow::VisualizationWindow(QWidget *p) : QGLWidget(p) {
@@ -30,22 +28,15 @@ void VisualizationWindow::createValues(int block_dimension, int num_blocks_x, in
 	srand(time(NULL));
 	BitmapLoader fb("road.bmp", width, height);
 	
-	uint32_t *reversed_image = fb.next32();
-	image = new uint32_t[width*height];
-	
-	for (uint32_t y = 0; y < height; y++) {
-		for (uint32_t x = 0; x < width; x++) {
-			image[x + y * width] = reversed_image[x + (height-y) * width];
-		}
-	}
+	image = fb.next32();
 
 	clusters = new uint16_t[num_blocks_x*num_blocks_y];
 	HistogramCluster cluster(width, height, block_dimension, num_blocks_x, num_blocks_y, num_bins);
 
 	uint16_t *reversed_clusters = cluster.doCluster(image, closeness_threshold, blindness_threshold);
-	for (uint32_t y = 0; y < num_blocks_y; y++) {
-		for (uint32_t x = 0; x < num_blocks_x; x++) {
-			clusters[y * num_blocks_x + x] = reversed_clusters[x + (num_blocks_y - y) * num_blocks_x];
+	for(int y = 0; y < num_blocks_y; y++) {
+		for(int x = 0; x < num_blocks_x; x++) {
+			clusters[y * num_blocks_x + x] = reversed_clusters[x + (num_blocks_y - 1 - y) * num_blocks_x];
 		}
 	}
 }
@@ -82,6 +73,16 @@ void getColorFromID(float* r, float* g, float* b, uint16_t value) {
 }
 
 void VisualizationWindow::paintGL() {
+
+	// for(int y = 0; y < num_blocks_y; y++) {
+	// 	std::cout << clusters[y * num_blocks_x];
+	// 	for(int x = 1; x < num_blocks_x; x++) {
+	// 		std::cout << "\t" << clusters[x + y * num_blocks_x];
+	// 	}
+	// 	std::cout << std::endl;
+	// }
+	// std::cout << std::endl;
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	glMatrixMode(GL_MODELVIEW);
@@ -91,11 +92,8 @@ void VisualizationWindow::paintGL() {
 
 	glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, image);
 
-	std::cout << num_blocks_x << std::endl;
-	std::cout << num_blocks_y << std::endl;
-
-	for (int x = 0; x < num_blocks_x; x++) {
-		for (int y = 0; y < num_blocks_y; y++) {
+	for(int x = 0; x < num_blocks_x; x++) {
+		for(int y = 0; y < num_blocks_y; y++) {
 
 			int _x = x * width / num_blocks_x; 
 			int _y = y * height / num_blocks_y; 

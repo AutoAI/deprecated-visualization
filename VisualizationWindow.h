@@ -17,8 +17,8 @@ protected:
 	void paintGL();
 
 private:
-	uint32_t width;
-	uint32_t height;
+	int width;
+	int height;
 
 	//uint8_t *grayData;
 	uint32_t *image;
